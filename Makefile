@@ -3,3 +3,6 @@ run: build
 
 build:
 	GOOS=js GOARCH=wasm go build -o ./assets/main.wasm ./cmd/wasm/main.go 
+
+test:
+	go run ./cmd/wasm/main.go
