@@ -10,6 +10,8 @@ This is a simple implementation of Conway's Game of Life written in Go.
 `make test`: runs the program directly with `go run`
 
 ### Controls
+`click`: toggle a square alive or dead
+
 `p`: toggles the paused state. The game starts paused.
 
 `1-5`: set the game speed 1 is the slowest and 5 is uncapped
