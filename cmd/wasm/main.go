@@ -15,9 +15,12 @@ const (
 	screenHeight = 2048
 	screenWidth  = 2048
 	cellSize     = 16
+
+	numRows = screenHeight / cellSize
+	numCols = screenWidth / cellSize
 )
 
-type Board = [128][128]bool
+type Board = [numCols][numRows]bool
 
 type Game struct {
 	state  Board
@@ -26,11 +29,6 @@ type Game struct {
 
 	lastUpdate time.Time
 }
-
-// 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-// 2. Any live cell with two or three live neighbours lives on to the next generation.
-// 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
-// 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
 func (g *Game) Update() error {
 
@@ -77,11 +75,13 @@ func (g *Game) Update() error {
 	return nil
 }
 
+// Conway's Game of Life Rules:
+// 1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.
+// 2. Any live cell with two or three live neighbours lives on to the next generation.
+// 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
+// 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 func (g *Game) aliveNextTick(x, y int) bool {
-
-	isAlive := g.state[x][y]
 	count := 0
-
 	for i := x - 1; i <= x+1; i++ {
 		for j := y - 1; j <= y+1; j++ {
 			if i >= 0 && i < len(g.state) && j >= 0 && j < len(g.state[0]) && g.state[i][j] {
@@ -90,11 +90,10 @@ func (g *Game) aliveNextTick(x, y int) bool {
 		}
 	}
 
+	isAlive := g.state[x][y]
 	if isAlive && count >= 3 && count <= 4 {
 		return true
-	}
-
-	if !isAlive && count == 3 {
+	} else if !isAlive && count == 3 {
 		return true
 	}
 
